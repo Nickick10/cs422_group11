@@ -7,6 +7,29 @@
     </head>
 
     <body>
-        
+        <button id="addTaskButton" style="position: absolute; top: 10px; left: 10px; padding: 15px 30px; font-size: 16px;">Add Task</button> <!-- Button to open the add task popup -->
+
+        <!-- Popup for adding a new task -->
+        <div id="addTaskPopup" style="display: none; position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); padding: 20px; background-color: white; border: 1px solid black; box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);">
+            <h2>Add a New Task</h3>
+            <form> <!-- Form to add a new task -->
+                <label for="taskName">Task Name:</label>
+                <input type="text" id="taskName" name="taskName"><br><br>
+                <button type="button" onclick="closePopup()">Close</button>
+            </form>
+        </div>
+
+        <script>
+            const addTaskButton = document.getElementById('addTaskButton'); //Connects both buttons from the HTML
+            const addTaskPopup = document.getElementById('addTaskPopup');
+
+            addTaskButton.addEventListener('click', () => { //Show popup when button is clicked
+                addTaskPopup.style.display = 'block';
+            });
+
+            function closePopup() { //Close popup when close button is clicked
+                addTaskPopup.style.display = 'none';
+            }
+        </script>
     </body>
 </html>
