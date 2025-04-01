@@ -9,6 +9,8 @@
     padding: 15px;
     border-right: 2px solid #ccc;
     box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.1);
+    max-height: 50vh; 
+    overflow-y: auto; /* adds the scrolling bar */
 }
 #taskSidebar h3 {
     text-align: center;

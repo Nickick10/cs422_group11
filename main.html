@@ -85,28 +85,42 @@
                 addTaskPopup.style.display = 'none';
             }
 
-            function populateTaskContainer(taskName){//function to store inside the task bar
+            function populateTaskContainer(taskName) { //function to store inside the task bar
                 if (!taskName){
-                    return;//doesnt add empty tasks
+                    return; //doesnt add empty tasks
                 }
 
-                let taskElement = document.createElement("div"); //creates the rectangle that stores tasks
+                let taskElement = document.createElement("div");//creates the container for each task
                 taskElement.style.display = "flex";
-                taskElement.style.alignItems = "center";
+                taskElement.style.flexDirection = "column";
+                taskElement.style.alignItems = "flex-start";
                 taskElement.style.padding = "10px";
+                taskElement.style.marginBottom = "10px";
+                taskElement.style.backgroundColor = "#fff";
+                taskElement.style.borderRadius = "5px";
+                taskElement.style.boxShadow = "1px 1px 3px rgba(0, 0, 0, 0.1)";
+
+                //creates task name on top
+                let taskText = document.createElement("span");
+                taskText.textContent = taskName;
+                taskText.style.fontWeight = "bold";
+                taskText.style.marginBottom = "5px";
+                taskText.style.textAlign = "center"; 
+                taskText.style.width = "100%"; 
+
+
+                //creates lower row for date and complete button
+                let lowerRow = document.createElement("div");
+                lowerRow.style.display = "flex";
+                lowerRow.style.justifyContent = "space-between";
+                lowerRow.style.width = "100%";
 
                 //creates the tasks date
                 let taskDate = document.createElement("span");
-                let today = new Date().toISOString().split('T')[0];//gets today date for now
+                let today = new Date().toISOString().split('T')[0]; //gets today's date for now
                 taskDate.textContent = today;
                 taskDate.style.color = "gray";
                 taskDate.style.fontSize = "14px";
-
-                //creates tasks name
-                let taskText = document.createElement("span");
-                taskText.textContent = taskName;
-                taskText.style.flex = "1";
-                taskText.style.margin = "10px";
 
                 //creates green complete button
                 let completeButton = document.createElement("button");
@@ -116,17 +130,20 @@
                 completeButton.style.border = "none";
                 completeButton.style.padding = "5px 10px";
                 completeButton.style.cursor = "pointer";
+                completeButton.style.borderRadius = "5px";
                 completeButton.onclick = function() {
-                    taskElement.style.textDecoration = "line-through"; // Mark as completed
-                    completeButton.disabled = true; // Disable the button
+                    taskElement.style.textDecoration = "line-through"; //mark as completed
+                    completeButton.disabled = true; //disables the button
                 };
 
-                //adds tasks info as childs
-                taskElement.appendChild(taskDate);
+                //assigns the children
+                lowerRow.appendChild(taskDate);
+                lowerRow.appendChild(completeButton);
                 taskElement.appendChild(taskText);
-                taskElement.appendChild(completeButton);
+                taskElement.appendChild(lowerRow);
                 taskListContainer.appendChild(taskElement);
             }
+
 
             //listens when you click enter on new task and adds its to task container
             document.querySelector('form').addEventListener('submit', function(event){
