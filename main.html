@@ -8,6 +8,15 @@
     </head>
 
     <body>
+         <!-- Sidebar for Tasks -->
+        <div id="taskSidebar">
+            <h3>Tasks</h3>
+            <div id="taskListContainer">
+
+                <!-- This is where we store the tasks -->
+            </div>
+        </div> <!-- end of sidebar -->
+
         <button id="addTaskButton" style="position: absolute; top: 10px; left: 10px; padding: 15px 30px; font-size: 16px;">Add Task</button> <!-- Button to open the add task popup -->
 
         <!-- Popup for adding a new task -->
@@ -71,7 +80,61 @@
             function closePopup() { //Close popup when close button is clicked
                 addTaskPopup.style.display = 'none';
             }
-            document
+
+            function populateTaskContainer(taskName){//function to store inside the task bar
+                if (!taskName){
+                    return;//doesnt add empty tasks
+                }
+
+                let taskElement = document.createElement("div"); //creates the rectangle that stores tasks
+                taskElement.style.display = "flex";
+                taskElement.style.alignItems = "center";
+                taskElement.style.padding = "10px";
+
+                //creates the tasks date
+                let taskDate = document.createElement("span");
+                let today = new Date().toISOString().split('T')[0];//gets today date for now
+                taskDate.textContent = today;
+                taskDate.style.color = "gray";
+                taskDate.style.fontSize = "14px";
+
+                //creates tasks name
+                let taskText = document.createElement("span");
+                taskText.textContent = taskName;
+                taskText.style.flex = "1";
+                taskText.style.margin = "10px";
+
+                //creates green complete button
+                let completeButton = document.createElement("button");
+                completeButton.textContent = "Complete";
+                completeButton.style.background = "green";
+                completeButton.style.color = "white";
+                completeButton.style.border = "none";
+                completeButton.style.padding = "5px 10px";
+                completeButton.style.cursor = "pointer";
+                completeButton.onclick = function() {
+                    taskElement.style.textDecoration = "line-through"; // Mark as completed
+                    completeButton.disabled = true; // Disable the button
+                };
+
+                //adds tasks info as childs
+                taskElement.appendChild(taskDate);
+                taskElement.appendChild(taskText);
+                taskElement.appendChild(completeButton);
+                taskListContainer.appendChild(taskElement);
+            }
+
+            //listens when you click enter on new task and adds its to task container
+            document.querySelector('form').addEventListener('submit', function(event){
+                event.preventDefault();
+                let newTask = taskNameInput.value.trim();
+                if (newTask) {
+                    populateTaskContainer(newTask);
+                    taskNameInput.value = "";
+                    closePopup(); 
+                }
+            });
+            
         </script>
     </body>
 </html>
