@@ -4,6 +4,7 @@
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <title>Rare Reminders</title>
+        <link rel="stylesheet" href="mainLayout.css"/>
     </head>
 
     <body>
@@ -11,7 +12,8 @@
 
         <!-- Popup for adding a new task -->
         <div id="addTaskPopup" style="display: none; position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); padding: 20px; background-color: white; border: 1px solid black; box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);">
-            <h2>Add a New Task</h3>
+            <h2>Add a New Task</h2>
+            <select name="" id="suggestedTasks"></select>
             <form> <!-- Form to add a new task -->
                 <label for="taskName">Task Name:</label>
                 <input type="text" id="taskName" name="taskName"><br><br>
@@ -22,14 +24,54 @@
         <script>
             const addTaskButton = document.getElementById('addTaskButton'); //Connects both buttons from the HTML
             const addTaskPopup = document.getElementById('addTaskPopup');
-
+            const suggestedTasks = document.getElementById('suggestedTasks');
+            const taskNameInput = document.getElementById('taskName')
+            taskData = [];
+            const url = './suggestedTask.json';
             addTaskButton.addEventListener('click', () => { //Show popup when button is clicked
                 addTaskPopup.style.display = 'block';
+                fetchDropDownOptons();
             });
+            function fetchDropDownOptons(){
+                fetch(url)
+                .then(res => res.json())
+                .then(data => {
+                taskData = data; 
+                loadDropDownOptions(data)})
+                .catch(err => console.log(err))
+            }
+            
+            function loadDropDownOptions(data){
+                suggestedTasks.innerHTML = "";
+                let defaultOption = document.createElement("option");
+                defaultOption.text = "Suggested Tasks";
+                defaultOption.value = "";
+                defaultOption.disabled = true;
+                defaultOption.selected = true;
+                suggestedTasks.appendChild(defaultOption);
+                
+                for(row of data)
+                {
+                    opt = document.createElement("option")
+                    opt.text = row.text
+                    opt.value = row.value
+                    opt.dataset.time = row.time
 
+                    suggestedTasks.options.add(opt)
+                }
+            }
+            suggestedTasks.addEventListener('change',function() {
+                selectedOption = this.options[this.selectedIndex];
+                selectedTask = taskData.find(task => task.text === selectedOption.text);
+
+                if(selectedTask){
+                    taskNameInput.value = selectedTask.text;
+                }
+            })
             function closePopup() { //Close popup when close button is clicked
                 addTaskPopup.style.display = 'none';
             }
+            document
         </script>
     </body>
 </html>
