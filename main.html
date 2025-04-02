@@ -22,15 +22,45 @@
             <span class="button__text">Add Task</span>
             <span class="button__icon"><svg xmlns="http://www.w3.org/2000/svg" width="24" viewBox="0 0 24 24" stroke-width="2" stroke-linejoin="round" stroke-linecap="round" stroke="currentColor" height="24" fill="none" class="svg"><line y2="19" y1="5" x2="12" x1="12"></line><line y2="12" y1="12" x2="19" x1="5"></line></svg></span>
         </button>
+        
+        <!-- Google Calendar Embed -->
+        <div id="calendarContainer" style="position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 70%; height: 80%; padding: 10px; box-sizing: border-box; background-color: white; border: 1px solid black; box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);">
+            <iframe 
+            src="https://calendar.google.com/calendar/embed?src=your_calendar_id&ctz=your_timezone" 
+            style="border: 1; width: 100%; height: 100%;" 
+            frameborder="0" 
+            scrolling="no"></iframe>
+        </div>
 
         <!-- Popup for adding a new task -->
         <div id="addTaskPopup" style="display: none; position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); padding: 20px; background-color: white; border: 1px solid black; box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);">
             <h2>Add a New Task</h2>
+            <span class="red-x" onclick="closePopup()">&times;</span>
             <select name="" id="suggestedTasks"></select>
-            <form> <!-- Form to add a new task -->
-                <label for="taskName">Task Name:</label>
-                <input type="text" id="taskName" name="taskName"><br><br>
-                <button type="button" onclick="closePopup()">Close</button>
+            <form id="taskForm">
+                <label for="taskName">Task</label>
+                <input type="text" id="taskName" name="taskName" placeholder="Name for task">
+                
+                <label for="taskDate">Date</label>
+                <input type="date" id="taskDate" name="taskDate">
+                
+                <div class="reschedule-container">
+                    <label for="reschedule">Reschedule</label>
+                    <input type="checkbox" id="reschedule" name="reschedule">
+                </div>
+                
+                <div class="reschedule-options">
+                    <input type="number" id="rescheduleTime" name="rescheduleTime" min="1" placeholder="Enter number">
+                    <select id="rescheduleUnit" name="rescheduleUnit">
+                        <option value="Months">Months</option>
+                        <option value="Years">Years</option>
+                    </select>
+                </div>
+                
+                <label for="description">Description</label>
+                <textarea id="description" name="description" placeholder="Write a description"></textarea>
+                
+                <button id="addTaskReminder" type="submit" class="add-btn">Add</button>
             </form>
         </div>
 
@@ -39,7 +69,11 @@
             const addTaskPopup = document.getElementById('addTaskPopup');
             const suggestedTasks = document.getElementById('suggestedTasks');
             const taskNameInput = document.getElementById('taskName')
-            taskData = [];
+            const addTaskReminder = document.getElementById('addTaskReminder');
+            const taskListContainer = document.getElementById('taskListContainer');
+
+            let tasks = []; //Array to store tasks that are in task bar
+            let taskData = [];
             const url = './suggestedTask.json';
             addTaskButton.addEventListener('click', () => { //Show popup when button is clicked
                 addTaskPopup.style.display = 'block';
@@ -81,12 +115,13 @@
                     taskNameInput.value = selectedTask.text;
                 }
             })
+            
             function closePopup() { //Close popup when close button is clicked
                 addTaskPopup.style.display = 'none';
             }
 
-            function populateTaskContainer(taskName) { //function to store inside the task bar
-                if (!taskName){
+            function populateTaskContainer(taskName, taskDateInput) { //function to store inside the task bar
+                if (!taskName || !taskDateInput) {
                     return; //doesnt add empty tasks
                 }
 
@@ -117,8 +152,7 @@
 
                 //creates the tasks date
                 let taskDate = document.createElement("span");
-                let today = new Date().toISOString().split('T')[0]; //gets today's date for now
-                taskDate.textContent = today;
+                taskDate.textContent = taskDateInput;
                 taskDate.style.color = "gray";
                 taskDate.style.fontSize = "14px";
 
@@ -144,18 +178,28 @@
                 taskListContainer.appendChild(taskElement);
             }
 
+            function sortTasks() {
+                //Sort taskData by ascending date
+                tasks.sort((a, b) => new Date(a.date) - new Date(b.date));
+
+                //Clear current task list and add them sorted
+                taskListContainer.innerHTML = "";
+                tasks.forEach(task => populateTaskContainer(task.name, task.date));
+            }
 
             //listens when you click enter on new task and adds its to task container
-            document.querySelector('form').addEventListener('submit', function(event){
+            addTaskReminder.addEventListener('click', function(event){
                 event.preventDefault();
                 let newTask = taskNameInput.value.trim();
-                if (newTask) {
-                    populateTaskContainer(newTask);
+                let taskDateInput = document.getElementById('taskDate').value;
+                if (newTask && taskDateInput) {
+                    tasks.push({ name: newTask, date: taskDateInput }); //Add new task to tasks
+                    sortTasks(); //Sort tasks and update the display
                     taskNameInput.value = "";
+                    document.getElementById('taskDate').value = "";
                     closePopup(); 
                 }
             });
-            
         </script>
     </body>
 </html>

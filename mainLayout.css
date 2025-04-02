@@ -84,3 +84,50 @@
     border: 1px solid #2e8644;
 }
 /* Style for add task button end */
+
+/* Style for popup screen start */
+body {
+    font-family: Arial, sans-serif;
+}
+.form-container {
+    width: 300px;
+    padding: 20px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.1);
+}
+label {
+    display: block;
+    margin-bottom: 5px;
+}
+input, select, textarea {
+    width: 100%;
+    padding: 5px;
+    margin-bottom: 10px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+}
+.reschedule-container {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+}
+.red-x {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    font-size: 60px;
+    color: red;
+    cursor: pointer;
+}
+.add-btn {
+    background-color: blue;
+    color: white;
+    padding: 10px;
+    border: none;
+    width: 100%;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+/* Style for popup screen end */
