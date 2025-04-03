@@ -64,51 +64,19 @@
             </form>
         </div>
 
-        <!-- Popup for editing a task -->
-        <div id="editTaskPopup" style="display: none; position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); padding: 20px; background-color: white; border: 1px solid black; box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);">
-            <h2>Edit Task</h2>
-            <span class="red-x" onclick="closeEditPopup()">&times;</span>
-            <form id="editTaskForm">
-                <label for="editTaskName">Task</label>
-                <input type="text" id="editTaskName" name="editTaskName" placeholder="Edit task name">
-
-                <label for="editTaskDate">Date Completed</label>
-                <input type="date" id="editTaskDate" name="editTaskDate">
-
-                <div class="reschedule-container">
-                    <label for="editReschedule">Reschedule</label>
-                    <input type="checkbox" id="editReschedule" name="editReschedule">
-                </div>
-
-                <div class="reschedule-options">
-                    <input type="number" id="editRescheduleTime" name="editRescheduleTime" min="1" placeholder="Enter number">
-                    <select id="editRescheduleUnit" name="editRescheduleUnit">
-                        <option value="Months">Months</option>
-                        <option value="Years">Years</option>
-                    </select>
-                </div>
-                <label for="editDescription">Description</label>
-                <textarea id="editDescription" name="editDescription" placeholder="Edit description"></textarea>
-                <button id="saveTaskChanges" type="submit" class="add-btn">Save</button>
-            </form>
-        </div>  
-            
         <script>
-            const addTaskButton = document.getElementById('addTaskButton');
+            const addTaskButton = document.getElementById('addTaskButton'); // Connects both buttons from the HTML
             const addTaskPopup = document.getElementById('addTaskPopup');
             const suggestedTasks = document.getElementById('suggestedTasks');
             const taskNameInput = document.getElementById('taskName');
             const addTaskReminder = document.getElementById('addTaskReminder');
             const taskListContainer = document.getElementById('taskListContainer');
-            const editTaskForm = document.getElementById('editTaskForm');
         
-            let tasks = [];
+            let tasks = []; // Array to store tasks that are in task bar
             let taskData = [];
-            let editTaskIndex = null;
-        
             const url = './suggestedTask.json';
         
-            addTaskButton.addEventListener('click', () => {
+            addTaskButton.addEventListener('click', () => { // Show popup when button is clicked
                 addTaskPopup.style.display = 'block';
                 fetchDropDownOptons();
             });
@@ -137,6 +105,7 @@
                     opt.text = row.text;
                     opt.value = row.value;
                     opt.dataset.time = row.time;
+        
                     suggestedTasks.options.add(opt);
                 }
             }
@@ -144,34 +113,22 @@
             suggestedTasks.addEventListener('change', function () {
                 let selectedOption = this.options[this.selectedIndex];
                 let selectedTask = taskData.find(task => task.text === selectedOption.text);
+        
                 if (selectedTask) {
                     taskNameInput.value = selectedTask.text;
                 }
             });
         
-            function closePopup() {
+            function closePopup() { // Close popup when close button is clicked
                 addTaskPopup.style.display = 'none';
             }
         
-            function openEditPopup(task = {}, index = null) {
-                editTaskIndex = index;
-                document.getElementById('editTaskName').value = task.name || '';
-                document.getElementById('editTaskDate').value = task.date || '';
-                document.getElementById('editReschedule').checked = task.reschedule || false;
-                document.getElementById('editRescheduleTime').value = task.rescheduleTime || '';
-                document.getElementById('editRescheduleUnit').value = task.rescheduleUnit || 'Months';
-                document.getElementById('editDescription').value = task.description || '';
-                editTaskPopup.style.display = 'block';
-            }
+            function populateTaskContainer(taskName, taskDateInput, rescheduleTime, rescheduleUnit) { // Function to store inside the task bar
+                if (!taskName || !taskDateInput) {
+                    return; // Doesn't add empty tasks
+                }
         
-            function closeEditPopup() {
-                editTaskPopup.style.display = 'none';
-            }
-        
-            function populateTaskContainer(taskName, taskDateInput) {
-                if (!taskName || !taskDateInput) return;
-        
-                let taskElement = document.createElement("div");
+                let taskElement = document.createElement("div"); // Creates the container for each task
                 taskElement.style.display = "flex";
                 taskElement.style.flexDirection = "column";
                 taskElement.style.alignItems = "flex-start";
@@ -180,39 +137,29 @@
                 taskElement.style.backgroundColor = "#fff";
                 taskElement.style.borderRadius = "5px";
                 taskElement.style.boxShadow = "1px 1px 3px rgba(0, 0, 0, 0.1)";
+                taskElement.style.position = "relative"; // To position the X button
         
+                // Create task name on top
                 let taskText = document.createElement("span");
                 taskText.textContent = taskName;
                 taskText.style.fontWeight = "bold";
                 taskText.style.marginBottom = "5px";
-                taskText.style.textAlign = "center";
+                taskText.style.textAlign = "center"; // Centers the text
                 taskText.style.width = "100%";
         
+                // Create lower row for date and complete button
                 let lowerRow = document.createElement("div");
                 lowerRow.style.display = "flex";
                 lowerRow.style.justifyContent = "space-between";
                 lowerRow.style.width = "100%";
         
+                // Create the task date
                 let taskDate = document.createElement("span");
                 taskDate.textContent = taskDateInput;
                 taskDate.style.color = "gray";
                 taskDate.style.fontSize = "14px";
         
-                let index = tasks.findIndex(t => t.name === taskName && t.date === taskDateInput);
-        
-                let editButton = document.createElement("button");
-                editButton.textContent = "Edit";
-                editButton.style.background = "#ffa500";
-                editButton.style.color = "white";
-                editButton.style.border = "none";
-                editButton.style.padding = "5px 10px";
-                editButton.style.cursor = "pointer";
-                editButton.style.borderRadius = "5px";
-                editButton.style.marginRight = "5px";
-                editButton.onclick = function () {
-                    openEditPopup(tasks[index], index);
-                };
-        
+                // Create green complete button
                 let completeButton = document.createElement("button");
                 completeButton.textContent = "Complete";
                 completeButton.style.background = "green";
@@ -221,67 +168,68 @@
                 completeButton.style.padding = "5px 10px";
                 completeButton.style.cursor = "pointer";
                 completeButton.style.borderRadius = "5px";
+        
+                // When the task is completed
                 completeButton.onclick = function () {
-                    taskElement.style.textDecoration = "line-through";
-                    completeButton.disabled = true;
+                    taskElement.style.textDecoration = "line-through"; // Mark as completed
+                    completeButton.disabled = true; // Disables the button
+        
+                    // Check if the task is rescheduled
+                    if (document.getElementById('reschedule').checked) {
+                        let newTaskDate = getNewTaskDate(taskDateInput, rescheduleTime, rescheduleUnit);
+                        tasks.push({ name: taskName, date: newTaskDate, rescheduleTime, rescheduleUnit }); // Add new task to tasks
+                        sortTasks(); // Sort tasks after adding new task
+                    }
+        
+                    // Automatically remove completed task after completion
+                    taskElement.remove();
+                    tasks = tasks.filter(task => task.name !== taskName || task.date !== taskDateInput); // Remove from tasks array
+                    sortTasks(); // Sort tasks after removal
                 };
         
+                // Assign the children
                 lowerRow.appendChild(taskDate);
-                lowerRow.appendChild(editButton);
                 lowerRow.appendChild(completeButton);
                 taskElement.appendChild(taskText);
                 taskElement.appendChild(lowerRow);
                 taskListContainer.appendChild(taskElement);
             }
         
-            function sortTasks() {
-                tasks.sort((a, b) => new Date(a.date) - new Date(b.date));
-                taskListContainer.innerHTML = "";
-                tasks.forEach(task => populateTaskContainer(task.name, task.date));
+            function getNewTaskDate(currentDate, rescheduleTime, rescheduleUnit) {
+                let date = new Date(currentDate);
+                if (rescheduleUnit === "Months") {
+                    date.setMonth(date.getMonth() + parseInt(rescheduleTime));
+                } else if (rescheduleUnit === "Years") {
+                    date.setFullYear(date.getFullYear() + parseInt(rescheduleTime));
+                }
+                return date.toISOString().split('T')[0]; // Return date in YYYY-MM-DD format
             }
         
+            function sortTasks() {
+                // Sort tasks array by ascending date
+                tasks.sort((a, b) => new Date(a.date) - new Date(b.date));
+        
+                // Clear current task list and re-add all tasks sorted
+                taskListContainer.innerHTML = "";
+                tasks.forEach(task => populateTaskContainer(task.name, task.date, task.rescheduleTime, task.rescheduleUnit));
+            }
+        
+            // Listens when you click enter on new task and adds it to task container
             addTaskReminder.addEventListener('click', function (event) {
                 event.preventDefault();
                 let newTask = taskNameInput.value.trim();
                 let taskDateInput = document.getElementById('taskDate').value;
+                let rescheduleTime = document.getElementById('rescheduleTime').value;
+                let rescheduleUnit = document.getElementById('rescheduleUnit').value;
+        
                 if (newTask && taskDateInput) {
-                    tasks.push({ name: newTask, date: taskDateInput }); //Add new task to tasks
-                    sortTasks(); //Sort tasks and update the display
+                    tasks.push({ name: newTask, date: taskDateInput, rescheduleTime, rescheduleUnit }); // Add new task to tasks
+                    sortTasks(); // Sort tasks and update the display
                     taskNameInput.value = "";
                     document.getElementById('taskDate').value = "";
-                    taskNameInput.style.borderColor = "";
-                    document.getElementById('taskDate').style.borderColor = ""
-                    rescheduleTime.value = ""
-                    rescheduleUnit.value = "Months"
-                    closePopup(); 
-                }else if(!newTask && !taskDateInput){
-                    document.getElementById('taskDate').style.borderColor = "red"
-                    taskNameInput.style.borderColor = "red";
-                }else if(!taskDateInput){
-                    document.getElementById('taskDate').style.borderColor = "red"
-                    taskNameInput.style.borderColor = "";
-                }else if(!newTask){
-                    taskNameInput.style.borderColor = "red";
-                    document.getElementById('taskDate').style.borderColor = ""
+                    closePopup();
                 }
             });
-        
-            editTaskForm.addEventListener('submit', function (event) {
-                event.preventDefault();
-        
-                if (editTaskIndex !== null) {
-                    tasks[editTaskIndex] = {
-                        name: document.getElementById('editTaskName').value,
-                        date: document.getElementById('editTaskDate').value,
-                        reschedule: document.getElementById('editReschedule').checked,
-                        rescheduleTime: document.getElementById('editRescheduleTime').value,
-                        rescheduleUnit: document.getElementById('editRescheduleUnit').value,
-                        description: document.getElementById('editDescription').value
-                    };
-                    sortTasks();
-                    closeEditPopup();
-                }
-            });
-        </script>
+        </script>           
     </body>
 </html>
