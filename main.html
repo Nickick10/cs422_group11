@@ -207,7 +207,20 @@
                     sortTasks(); //Sort tasks and update the display
                     taskNameInput.value = "";
                     document.getElementById('taskDate').value = "";
+                    taskNameInput.style.borderColor = "black";
+                    document.getElementById('taskDate').style.borderColor = "clear"
+                    rescheduleTime.value = ""
+                    rescheduleUnit.value = "Months"
                     closePopup(); 
+                }else if(!newTask && !taskDateInput){
+                    document.getElementById('taskDate').style.borderColor = "red"
+                    taskNameInput.style.borderColor = "red";
+                }else if(!taskDateInput){
+                    document.getElementById('taskDate').style.borderColor = "red"
+                    taskNameInput.style.borderColor = "default";
+                }else if(!newTask){
+                    taskNameInput.style.borderColor = "red";
+                    document.getElementById('taskDate').style.borderColor = "black"
                 }
             });
         </script>
