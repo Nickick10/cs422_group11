@@ -28,8 +28,9 @@
 /* Style for add task button start */
 .button {
     position: relative;
-    width: 150px;
+    width: 215px;
     height: 40px;
+    margin-top: 180px;
     cursor: pointer;
     display: flex;
     align-items: center;
@@ -52,6 +53,7 @@
     transform: translateX(109px);
     height: 100%;
     width: 39px;
+    margin-left: 60px;
     background-color: #34974d;
     display: flex;
     align-items: center;
@@ -72,7 +74,7 @@
 }
 
 .button:hover .button__icon {
-    width: 148px;
+    width: 85px;
     transform: translateX(0);
 }
 
