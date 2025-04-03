@@ -71,6 +71,8 @@
             const taskNameInput = document.getElementById('taskName')
             const addTaskReminder = document.getElementById('addTaskReminder');
             const taskListContainer = document.getElementById('taskListContainer');
+            const rescheduleTime = document.getElementById('rescheduleTime');
+            const rescheduleUnit = document.getElementById('rescheduleUnit');
 
             let tasks = []; //Array to store tasks that are in task bar
             let taskData = [];
@@ -102,17 +104,25 @@
                     opt = document.createElement("option")
                     opt.text = row.text
                     opt.value = row.value
-                    opt.dataset.time = row.time
+                    opt.dataset.time= row.time
+                    console.log(opt.dataset.time)
 
                     suggestedTasks.options.add(opt)
                 }
             }
             suggestedTasks.addEventListener('change',function() {
+                index = this.selectedIndex
                 selectedOption = this.options[this.selectedIndex];
+                selectedTime = selectedOption.dataset.time;
                 selectedTask = taskData.find(task => task.text === selectedOption.text);
-
                 if(selectedTask){
                     taskNameInput.value = selectedTask.text;
+                    rescheduleTime.value = selectedTask.value;
+                    if(selectedTime == "Months"){
+                        rescheduleUnit.value = "Months";
+                    }else{
+                        rescheduleUnit.value = "Years"
+                    }
                 }
             })
             
