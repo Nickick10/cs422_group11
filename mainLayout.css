@@ -4,12 +4,12 @@
     top: 50%;
     left: 0;
     transform: translateY(-50%);
-    width: 200px;
+    width: 300px;
     background-color: #f4f4f4;
     padding: 15px;
     border-right: 2px solid #ccc;
     box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.1);
-    height: 300px; /*sets the height*/
+    height: 500px; /*sets the height*/
     display: flex;
     flex-direction: column;
     overflow: hidden;
@@ -28,9 +28,9 @@
 /* Style for add task button start */
 .button {
     position: relative;
-    width: 215px;
+    width: 325px;
     height: 40px;
-    margin-top: 180px;
+    margin-top: 80px;
     cursor: pointer;
     display: flex;
     align-items: center;
@@ -46,6 +46,8 @@
     transform: translateX(30px);
     color: #fff;
     font-weight: 600;
+    margin-left: 90px;
+
 }
 
 .button .button__icon {
@@ -53,7 +55,7 @@
     transform: translateX(109px);
     height: 100%;
     width: 39px;
-    margin-left: 60px;
+    margin-left: 170px;
     background-color: #34974d;
     display: flex;
     align-items: center;
@@ -75,11 +77,13 @@
 
 .button:hover .button__icon {
     width: 85px;
-    transform: translateX(0);
+    transform: translateX(-50px);
+
 }
 
 .button:active .button__icon {
     background-color: #2e8644;
+
 }
 
 .button:active {
