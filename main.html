@@ -111,6 +111,15 @@
             let editTaskIndex = null;
         
             const url = './suggestedTask.json';
+            
+            window.onload = function () {
+                const saved = localStorage.getItem('taskData');
+                if (saved) {
+                    tasks = JSON.parse(saved);
+                    sortTasks(); // load and display them
+                }
+            };
+            window.addEventListener("beforeunload", saveTasks);
         
             addTaskButton.addEventListener('click', () => {
                 addTaskPopup.style.display = 'block';
@@ -348,6 +357,9 @@
                 editBtn.onclick = function () {
                     openEditPopup(task, index);
                 };
+            }
+            function saveTasks(){
+                localStorage.setItem('taskData', JSON.stringify(tasks));
             }
 
         </script>
