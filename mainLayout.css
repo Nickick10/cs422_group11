@@ -24,6 +24,10 @@
 #taskSidebar div {
     overflow-y: auto; 
 }
+#taskInfoBox{
+    position: fixed;
+    left: 30%;
+}
 
 /* Style for add task button start */
 .button {

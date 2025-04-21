@@ -16,6 +16,15 @@
                 <!-- This is where we store the tasks -->
             </div>
         </div> <!-- end of sidebar -->
+        <!-- Info Box for Task Details -->
+        <div id="taskInfoBox" style="flex: 1; padding: 20px;">
+            <h2>Task Info</h2>
+            <p id="infoName"><strong>Name:</strong> <span></span></p>
+            <p id="infoDate"><strong>Date:</strong> <span></span></p>
+            <p id="infoReschedule"><strong>Reschedule:</strong> <span></span></p>
+            <p id="infoDescription"><strong>Description:</strong> <span></span></p>
+            <button id="editFromInfoBox" class="add-btn" style="margin-top: 10px;">Edit Task</button>
+        </div>        
 
         <!-- Button to open the add task popup -->
         <button id="addTaskButton" type="button" class="button">
@@ -205,17 +214,17 @@
         
                 let index = tasks.findIndex(t => t.name === taskName && t.date === taskDateInput);
         
-                let editButton = document.createElement("button");
-                editButton.textContent = "Edit";
-                editButton.style.background = "#ffa500";
-                editButton.style.color = "white";
-                editButton.style.border = "none";
-                editButton.style.padding = "5px 10px";
-                editButton.style.cursor = "pointer";
-                editButton.style.borderRadius = "5px";
-                editButton.style.marginRight = "5px";
-                editButton.onclick = function () {
-                    openEditPopup(tasks[index], index);
+                let viewButton = document.createElement("button");
+                viewButton.textContent = "View Details";
+                viewButton.style.background = "#ffa500";
+                viewButton.style.color = "white";
+                viewButton.style.border = "none";
+                viewButton.style.padding = "5px 10px";
+                viewButton.style.cursor = "pointer";
+                viewButton.style.borderRadius = "5px";
+                viewButton.style.marginRight = "5px";
+                viewButton.onclick = function () {
+                    displayTaskInfo(tasks[index],index)
                 };
         
                 let completeButton = document.createElement("button");
@@ -251,7 +260,7 @@
                 };
         
                 lowerRow.appendChild(taskDate);
-                lowerRow.appendChild(editButton);
+                lowerRow.appendChild(viewButton);
                 lowerRow.appendChild(completeButton);
                 taskElement.appendChild(taskText);
                 taskElement.appendChild(lowerRow);
@@ -319,9 +328,28 @@
                         description: document.getElementById('editDescription').value
                     };
                     sortTasks();
+                    displayTaskInfo(tasks[editTaskIndex],editTaskIndex);
                     closeEditPopup();
                 }
             });
+            function displayTaskInfo(task, index) {
+                document.getElementById('infoName').querySelector('span').textContent = task.name;
+                document.getElementById('infoDate').querySelector('span').textContent = task.date;
+                document.getElementById('infoReschedule').querySelector('span').textContent = 
+                    task.reschedule ? `Every ${task.rescheduleTime} ${task.rescheduleUnit}` : 'No';
+                document.getElementById('infoDescription').querySelector('span').textContent = 
+                    task.description || 'No description provided.';
+
+                // Save the index for editing later
+                editTaskIndex = index;
+
+                // Assign edit button in info box to open the edit popup
+                const editBtn = document.getElementById('editFromInfoBox');
+                editBtn.onclick = function () {
+                    openEditPopup(task, index);
+                };
+            }
+
         </script>
     </body>
 </html>
