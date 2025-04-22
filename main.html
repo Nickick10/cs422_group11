@@ -41,7 +41,7 @@
         <!-- Popup for adding a new task -->
         <div id="addTaskPopup" style="display: none; position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); padding: 20px; background-color: white; border: 1px solid black; box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);">
             <h2>Add a New Task</h2>
-              <span class="red-x" onclick="closePopup()">&times;</span>
+              <!-- <span class="red-x" onclick="closePopup()">&times;</span> -->
             <select name="" id="suggestedTasks"></select>
             <form id="taskForm">
                 <label for="taskName">Task*</label>
@@ -68,12 +68,13 @@
                 
                 <button id="addTaskReminder" type="submit" class="add-btn">Add</button>
             </form>
+            <button id="cancelAddingChanges" class="add-btn"  style="margin-top: 20px" onclick="closePopup()">Cancel</button>
         </div>
 
         <!-- Popup for editing a task -->
         <div id="editTaskPopup" style="display: none; position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); padding: 20px; background-color: white; border: 1px solid black; box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);">
             <h2>Edit Task</h2>
-            <span class="red-x" onclick="closeEditPopup()">&times;</span>
+            <!-- <span class="red-x" onclick="closeEditPopup()">&times;</span> -->
             <form id="editTaskForm">
                 <label for="editTaskName">Task</label>
                 <input type="text" id="editTaskName" name="editTaskName" placeholder="Edit task name">
@@ -97,6 +98,8 @@
                 <textarea id="editDescription" name="editDescription" placeholder="Edit description"></textarea>
                 <button id="saveTaskChanges" type="submit" class="add-btn">Save</button>
             </form>
+            <button id="cancelTaskChanges" class="add-btn"  style="margin-top: 20px" onclick="closeEditPopup()">Cancel changes</button>
+
         </div>  
             
         <script>

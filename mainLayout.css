@@ -122,14 +122,6 @@ input, select, textarea {
     align-items: center;
     gap: 5px;
 }
-.red-x {
-    position: absolute;
-    top: 10px;
-    right: 10px;
-    font-size: 60px;
-    color: red;
-    cursor: pointer;
-}
 .add-btn {
     background-color: blue;
     color: white;
@@ -139,5 +131,22 @@ input, select, textarea {
     border-radius: 4px;
     cursor: pointer;
 }
+
+#cancelTaskChanges{
+    background-color: red;
+}
+
+#saveTaskChanges{
+    background-color: green;
+}
+
+#addTaskReminder{
+    background-color: green;
+}
+
+#cancelAddingChanges{
+    background-color: red;
+}
+
 
 /* Style for popup screen end */
