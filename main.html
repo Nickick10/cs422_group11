@@ -16,6 +16,12 @@
                 <!-- This is where we store the tasks -->
             </div>
         </div> <!-- end of sidebar -->
+
+        <!-- Logo at the top middle -->
+        <div id="logoContainer" style="position: absolute; top: 10px; left: 50%; transform: translateX(-50%);">
+            <img src="raretaskreminderlogo.png" alt="raretaskreminderlogo" style="width: 200px; height: auto;">
+        </div>
+
         <!-- Info Box for Task Details -->
         <div id="taskInfoBox" style="flex: 1; padding: 20px;">
             <h2>Task Info</h2>
@@ -155,21 +161,30 @@
             }
         
             suggestedTasks.addEventListener('change',function() {
-                 index = this.selectedIndex
-                 selectedOption = this.options[this.selectedIndex];
-                 selectedTime = selectedOption.dataset.time;
-                 selectedTask = taskData.find(task => task.text === selectedOption.text);
- 
-                 if(selectedTask){
-                     taskNameInput.value = selectedTask.text;
-                     rescheduleTime.value = selectedTask.value;
-                     reschedule.checked = true;
-                     if(selectedTime == "Months"){
-                         rescheduleUnit.value = "Months";
-                     }else{
-                         rescheduleUnit.value = "Years"
-                     }
-                 }
+                index = this.selectedIndex
+                selectedOption = this.options[this.selectedIndex];
+                selectedTime = selectedOption.dataset.time;
+                selectedTask = taskData.find(task => task.text === selectedOption.text);
+
+                if(selectedTask){
+                    taskNameInput.value = selectedTask.text;
+                    rescheduleTime.value = selectedTask.value;
+                    reschedule.checked = true;
+                    if(selectedTime == "Months"){
+                        rescheduleUnit.value = "Months";
+                    }else{
+                        rescheduleUnit.value = "Years"
+                    }
+
+                    taskNameInput.style.borderColor = "blue";
+                    rescheduleTime.style.borderColor = "blue";
+                    rescheduleUnit.style.borderColor = "blue";
+                    setTimeout(() => {
+                        taskNameInput.style.borderColor = "";
+                        rescheduleTime.style.borderColor = "";
+                        rescheduleUnit.style.borderColor = "";
+                    }, 2000);
+                }
              })
         
             function closePopup() {
