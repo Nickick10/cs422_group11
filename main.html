@@ -30,6 +30,8 @@
             <p id="infoReschedule"><strong>Reschedule:</strong> <span></span></p>
             <p id="infoDescription"><strong>Description:</strong> <span></span></p>
             <button id="editFromInfoBox" class="add-btn" style="margin-top: 10px;">Edit Task</button>
+            <!-- Delete button to delete the task that is selected from the task array -->
+            <button id="deleteTaskButton" class="add-btn" style="margin-top: 10px;">Delete Task</button>
         </div>        
 
         <!-- Button to open the add task popup -->
@@ -380,6 +382,29 @@
                 localStorage.setItem('taskData', JSON.stringify(tasks));
             }
 
+            //Delete task button, when clicked, it will delete the task that is selected from the task array
+            document.getElementById('deleteTaskButton').addEventListener('click', function() {
+                if (editTaskIndex !== null) {
+                    //Confirm with the user before deleting
+                    if (confirm('Are you sure you want to DELETE this task?')) {
+                        tasks.splice(editTaskIndex, 1); //Remove the task from the array
+                        
+                        //Clear the task info box
+                        document.getElementById('infoName').querySelector('span').textContent = '';
+                        document.getElementById('infoDate').querySelector('span').textContent = '';
+                        document.getElementById('infoReschedule').querySelector('span').textContent = '';
+                        document.getElementById('infoDescription').querySelector('span').textContent = '';
+                        
+                        //Reset the edit index
+                        editTaskIndex = null;
+
+                        sortTasks(); //Refresh the task list
+                        saveTasks(); //Save changes to localStorage
+                    }
+                } else {
+                    alert('No task selected to delete.');
+                }
+            });
         </script>
     </body>
 </html>
