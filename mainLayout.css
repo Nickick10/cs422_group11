@@ -26,7 +26,9 @@
 }
 #taskInfoBox{
     position: fixed;
-    left: 30%;
+    top: 20%;
+    left: 40%;
+    font-size: x-large;
 }
 
 /* Style for add task button start */

@@ -5,6 +5,7 @@
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <title>Rare Reminders</title>
         <link rel="stylesheet" href="mainLayout.css"/>
+        <script src="https://cdn.emailjs.com/dist/email.min.js"></script> 
     </head>
 
     <body>
@@ -31,7 +32,7 @@
             <p id="infoDescription"><strong>Description:</strong> <span></span></p>
             <button id="editFromInfoBox" class="add-btn" style="margin-top: 10px;">Edit Task</button>
             <!-- Delete button to delete the task that is selected from the task array -->
-            <button id="deleteTaskButton" class="add-btn" style="margin-top: 10px; background-color: red; color: white;">Delete Task</button>
+            <button id="deleteTaskButton" class="add-btn" style="margin-top: 10px;">Delete Task</button>
         </div>        
 
         <!-- Button to open the add task popup -->
@@ -67,7 +68,8 @@
                 
                 <label for="description">Description</label>
                 <textarea id="description" name="description" placeholder="Write a description"></textarea>
-                
+                <label for="userEmail">Email for reminders</label>
+                <input type="email" id="userEmail" name="userEmail" placeholder="Enter your email">
                 <button id="addTaskReminder" type="submit" class="add-btn">Add</button>
             </form>
             <button id="cancelAddingChanges" class="add-btn"  style="margin-top: 20px" onclick="closePopup()">Cancel</button>
@@ -103,7 +105,7 @@
             <button id="cancelTaskChanges" class="add-btn"  style="margin-top: 20px" onclick="closeEditPopup()">Cancel changes</button>
 
         </div>  
-            
+       
         <script>
             const addTaskButton = document.getElementById('addTaskButton');
             const addTaskPopup = document.getElementById('addTaskPopup');
@@ -116,11 +118,13 @@
             const editTaskForm = document.getElementById('editTaskForm');
             const rescheduleTime = document.getElementById('rescheduleTime');
             const rescheduleUnit = document.getElementById('rescheduleUnit');
+            const taskEmail = document.getElementById('userEmail').value;
+
         
             let tasks = [];
             let taskData = [];
             let editTaskIndex = null;
-        
+            emailjs.init("krw1YTF71_XDbqmdR");
             const url = './suggestedTask.json';
             
             window.onload = function () {
@@ -129,6 +133,7 @@
                     tasks = JSON.parse(saved);
                     sortTasks(); // load and display them
                 }
+                checkDueTasksAndSendReminders();
             };
             window.addEventListener("beforeunload", saveTasks);
         
@@ -278,7 +283,8 @@
                         reschedule: true, 
                         rescheduleTime: tasks[index].rescheduleTime, 
                         rescheduleUnit: tasks[index].rescheduleUnit, 
-                        description: tasks[index].description
+                        description: tasks[index].description,
+                        email: taskEmail
                     });
                 }
 
@@ -319,8 +325,10 @@
                 let rescheduleTimeInput = document.getElementById('rescheduleTime').value
                 let rescheduleUnitInput = document.getElementById('rescheduleUnit').value
                 let descriptionValue = document.getElementById('description').value
+                let taskEmail = document.getElementById('userEmail').value
                 if (newTask && taskDateInput) {
-                    tasks.push({ name: newTask, date: taskDateInput, reschedule: rescheduleInput, rescheduleTime: rescheduleTimeInput, rescheduleUnit: rescheduleUnitInput, description: descriptionValue }); //Add new task to tasks
+                    let newDate = getNewTaskDate(taskDateInput,rescheduleTimeInput,rescheduleUnitInput);
+                    tasks.push({ name: newTask, date: newDate, reschedule: rescheduleInput, rescheduleTime: rescheduleTimeInput, rescheduleUnit: rescheduleUnitInput, description: descriptionValue, email: taskEmail }); //Add new task to tasks
                     console.log(tasks)
                     sortTasks(); //Sort tasks and update the display
                     taskNameInput.value = "";
@@ -405,6 +413,39 @@
                     alert('No task selected to delete.');
                 }
             });
+            function checkDueTasksAndSendReminders() {
+                const tasks = JSON.parse(localStorage.getItem("tasks")) || [];
+                const now = new Date();
+
+                tasks.forEach(task => {
+                const dueDate = new Date(task.dueDate);
+                const timeDiff = dueDate - now;
+                const hoursLeft = timeDiff / (1000 * 60 * 60);
+
+                if (hoursLeft <= 24 && !task.reminderSent) {
+                    // Send email via EmailJS
+                    emailjs.send("service_urnpeu7", "template_disl2ta", {
+                    task_name: task.name,
+                    due_date: dueDate.toLocaleString(),
+                    email: task.email
+                    }).then(() => {
+                    console.log("Email sent for task:", task.name);
+                    task.reminderSent = true;
+                    localStorage.setItem("tasks", JSON.stringify(tasks));
+                    }).catch(console.error);
+                }
+                });
+                }
+            function sendReminderEmail(task) {
+                emailjs.send("service_urnpeu7", "template_disl2ta", {
+                task_name: task.name,
+                due_date: dueDate.toLocaleString(),
+                email: task.email
+                }).then(
+                response => console.log("Email sent!", response.status, response.text),
+                error => console.error("Email failed:", error)
+                );
+            }
         </script>
     </body>
 </html>
