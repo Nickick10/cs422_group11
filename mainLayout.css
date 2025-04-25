@@ -161,3 +161,21 @@ input, select, textarea {
 
 
 /* Style for popup screen end */
+/* Toast style */
+.toast {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  background: black;
+  color: white;
+  padding: 12px 20px;
+  border-radius: 4px;
+  font-size: 14px;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+  z-index: 1000;
+}
+/* Show the toast */
+.toast.show {
+  opacity: 1;
+}
