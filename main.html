@@ -116,6 +116,7 @@
             const editTaskForm = document.getElementById('editTaskForm');
             const rescheduleTime = document.getElementById('rescheduleTime');
             const rescheduleUnit = document.getElementById('rescheduleUnit');
+            const cancelAddingChanges = document.getElementById('cancelAddingChanges');
         
             let tasks = [];
             let taskData = [];
@@ -326,11 +327,23 @@
                 let newTask = taskNameInput.value.trim();
                 let taskDateInput = document.getElementById('taskDate').value;
                 let rescheduleInput= document.getElementById('reschedule').checked
-                let rescheduleTimeInput = document.getElementById('rescheduleTime').value
+                let rescheduleTimeInput = parseInt(document.getElementById('rescheduleTime').value);
                 let rescheduleUnitInput = document.getElementById('rescheduleUnit').value
                 let descriptionValue = document.getElementById('description').value
                 if (newTask && taskDateInput) {
-                    tasks.push({ name: newTask, date: taskDateInput, reschedule: rescheduleInput, rescheduleTime: rescheduleTimeInput, rescheduleUnit: rescheduleUnitInput, description: descriptionValue }); //Add new task to tasks
+                    let adjustedDate = new Date(taskDateInput);
+
+                    if (rescheduleInput && !isNaN(rescheduleTimeInput)) {
+                        if (rescheduleUnitInput === "Months") {
+                            adjustedDate.setMonth(adjustedDate.getMonth() + rescheduleTimeInput);
+                        } else if (rescheduleUnitInput === "Years") {
+                            adjustedDate.setFullYear(adjustedDate.getFullYear() + rescheduleTimeInput);
+                        }
+                    }
+
+                    let formattedAdjustedDate = adjustedDate.toISOString().split('T')[0];
+                    
+                    tasks.push({ name: newTask, date: formattedAdjustedDate, reschedule: rescheduleInput, rescheduleTime: rescheduleTimeInput, rescheduleUnit: rescheduleUnitInput, description: descriptionValue }); //Add new task to tasks
                     console.log(tasks)
                     sortTasks(); //Sort tasks and update the display
                     showToast(`✅ Task “${newTask}” added successfully!`);//shows we created task
@@ -339,17 +352,19 @@
                     taskNameInput.style.borderColor = "";
                     document.getElementById('taskDate').style.borderColor = ""
                     rescheduleTime.value = ""
+                    rescheduleTime.style.borderColor = ""
+                    reschedule.checked = false;
                     rescheduleUnit.value = "Months"
                     reschedule.value = ""
                     description.value = ""
-                    closePopup(); 
-                }else if(!newTask && !taskDateInput){
+                    closePopup();
+                } else if (!newTask && !taskDateInput){
                     document.getElementById('taskDate').style.borderColor = "red"
                     taskNameInput.style.borderColor = "red";
-                }else if(!taskDateInput){
+                } else if (!taskDateInput){
                     document.getElementById('taskDate').style.borderColor = "red"
                     taskNameInput.style.borderColor = "";
-                }else if(!newTask){
+                } else if (!newTask){
                     taskNameInput.style.borderColor = "red";
                     document.getElementById('taskDate').style.borderColor = ""
                 }
@@ -386,7 +401,11 @@
                 // Assign edit button in info box to open the edit popup
                 const editBtn = document.getElementById('editFromInfoBox');
                 editBtn.onclick = function () {
-                    openEditPopup(task, index);
+                    if (editTaskIndex !== null) {
+                        openEditPopup(task, index);
+                    } else {
+                        alert('No task selected to edit.');
+                    }
                 };
             }
             function saveTasks(){
@@ -423,6 +442,13 @@
                     alert('No task selected to delete.');
                 }
             });
+
+            //Cancel button resets all border colors normal after adding task
+            cancelAddingChanges.addEventListener('click', function() {
+                taskNameInput.style.borderColor = "";
+                document.getElementById('taskDate').style.borderColor = ""
+            });
+
         </script>
         <div id="toast" class="toast"></div>
     </body>

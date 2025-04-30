@@ -45,12 +45,13 @@
     position: relative;
     width: 325px;
     height: 40px;
-    margin-top: 80px;
+    margin-top: 65px;
     cursor: pointer;
     display: flex;
     align-items: center;
     border: 1px solid #34974d;
     background-color: #3aa856;
+    left: -5px;
 }
 
 .button, .button__icon, .button__text {
@@ -92,7 +93,7 @@
 
 .button:hover .button__icon {
     width: 85px;
-    transform: translateX(-50px);
+    transform: translateX(-55px);
 
 }
 
